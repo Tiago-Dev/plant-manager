@@ -10,5 +10,7 @@ App to management the orders of a pizza restaurant
 
 
 ## Run app
+
 yarn start
-yarn android or yarn ios
+
+yarn android || yarn ios
