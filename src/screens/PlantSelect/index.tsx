@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-
+import { FlatList, View } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 
-import { EnvironmentButton } from '../components/EnvironmentButton';
-import { Header } from '../components/Header';
-import { Load } from '../components/Load';
-import { PlantCardPrimary } from '../components/PlantCardPrimary';
-import { PlantProps } from '../libs/storage';
-import api from '../services/api';
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
+import { EnvironmentButton } from '@components/EnvironmentButton';
+import { Header } from '@components/Header';
+import { Load } from '@components/Load';
+import { PlantCardPrimary } from '@components/PlantCardPrimary';
+import { PlantProps } from '../../libs/storage';
+import api from '../../services/api';
+import * as S from './styles';
 
 interface EnvironmentProps {
   key: string;
   title: string;
-}
+};
 
 export function PlantSelect() {
   const navigation = useNavigation();
@@ -30,14 +28,18 @@ export function PlantSelect() {
 
   useEffect(() => {
     async function fetchEnvironment() {
-      const { data } = await api.get('plants_environments?_sort=title&_order=asc')
-      setEnvironments([
-        {
-          key: 'all',
-          title: 'Todos'
-        },
-        ...data
-      ]);
+      try {
+        const { data } = await api.get('plants_environments?_sort=title&_order=asc')
+        setEnvironments([
+          {
+            key: 'all',
+            title: 'Todos'
+          },
+          ...data
+        ]);
+      } catch (error) {
+        console.log('error', error)
+      }
     }
 
     fetchEnvironment();
@@ -90,29 +92,24 @@ export function PlantSelect() {
 
   function handlePlantSelect(plant: PlantProps) {
     navigation.navigate('PlantSave', { plant })
-  }
+  };
 
   if (loading)
     return <Load />
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <S.Container>
+      <S.Header>
         <Header />
-
-        <Text style={styles.title}>
-          Em qual ambiente
-        </Text>
-        <Text style={styles.subtitle}>
-          você quer colocar sua planta?
-        </Text>
-      </View>
+        <S.Title>Em qual ambiente</S.Title>
+        <S.Subtitle>você quer colocar sua planta?</S.Subtitle>
+      </S.Header>
 
       <View>
-        <FlatList
+        <S.EnvironmentList
           data={environments}
-          keyExtractor={(item) => String(item.key)}
-          renderItem={({ item }) => (
+          keyExtractor={(item: any) => String(item.key)}
+          renderItem={({ item }: any) => (
             <EnvironmentButton
               title={item.title}
               active={item.key === environmentSelected}
@@ -121,11 +118,10 @@ export function PlantSelect() {
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.environmentList}
         />
       </View>
 
-      <View style={styles.plants}>
+      <S.Plants>
         <FlatList
           data={filteredPlants}
           keyExtractor={(item) => String(item.id)}
@@ -143,49 +139,11 @@ export function PlantSelect() {
           }
           ListFooterComponent={
             loadingMore ?
-              <ActivityIndicator color={colors.green} /> :
+              <S.Indicator /> :
               <></>
           }
         />
-      </View>
-
-    </View>
+      </S.Plants>
+    </S.Container>
   )
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    backgroundColor: colors.background
-  },
-  header: {
-    paddingHorizontal: 30
-  },
-  title: {
-    fontSize: 17,
-    color: colors.heading,
-    fontFamily: fonts.heading,
-    lineHeight: 20,
-    marginTop: 15,
-  },
-  subtitle: {
-    fontFamily: fonts.text,
-    fontSize: 17,
-    lineHeight: 20,
-    color: colors.heading
-  },
-  environmentList: {
-    height: 40,
-    justifyContent: 'center',
-    marginBottom: 5,
-    marginLeft: 32,
-    marginVertical: 32
-  },
-  plants: {
-    flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: 'center'
-  },
-});
