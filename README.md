@@ -1,14 +1,11 @@
-# Plant Manager
-Plant manager, for you to take better care of your plants.
-
-![Untitled](https://user-images.githubusercontent.com/31423467/119426060-f25ee900-bcde-11eb-9ba7-c19216c9fe06.png)
-
+# Gopizza
+App to management the orders of a pizza restaurant
 
 ## Technologies
 - React Native
 - Typescript
-- Expo
-- Lottie React Native
+- Firebase
+- Expo Bare Workflow
 - Styled Components
 
 
