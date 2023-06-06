@@ -1,10 +1,10 @@
 # Gopizza
-App to management the orders of a pizza restaurant
+
+Plant manager, for you to take better care of your plants.
 
 ## Technologies
 - React Native
 - Typescript
-- Firebase
 - Expo Bare Workflow
 - Styled Components
 
